@@ -8,17 +8,29 @@ Converter::ToString(const milliseconds& value, bool is_ms)
   std::time_t now_tt = Clock::to_time_t(tp_now);
   std::tm* __tm = std::localtime(&now_tt);
 
-  std::string result = std::to_string(__tm->tm_year + 1900);
-  if (__tm->tm_mon < 9) result += "0";
-  result += std::to_string(__tm->tm_mon + 1);
-  if (__tm->tm_mday < 10) result += "0";
-  result += std::to_string(__tm->tm_mday);
-  result += "_";
-  result += std::to_string(__tm->tm_hour);
-  result += std::to_string(__tm->tm_min) + std::to_string(__tm->tm_sec);
-
-  if (is_ms) result += std::to_string(value.count() % 1000);
-
+  std::string result;
+  if (is_ms) {
+    result.resize(18);
+    sprintf(result.data(),
+            "%04d%02d%02d_%02d%02d%02d%03d",
+            __tm->tm_year + 1900,
+            __tm->tm_mon + 1,
+            __tm->tm_mday,
+            __tm->tm_hour,
+            __tm->tm_min,
+            __tm->tm_sec,
+            value.count() % 1000);
+  } else {
+    result.resize(15);
+    sprintf(result.data(),
+            "%04d%02d%02d_%02d%02d%02d",
+            __tm->tm_year + 1900,
+            __tm->tm_mon + 1,
+            __tm->tm_mday,
+            __tm->tm_hour,
+            __tm->tm_min,
+            __tm->tm_sec);
+  }
   return result;
 }
 
