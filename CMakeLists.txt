@@ -13,15 +13,15 @@ endif()
 
 
 if (CMAKE_VERSION VERSION_LESS "3.9")
-  project(var
+  project(Converter
     VERSION 1.0.0
     LANGUAGES CXX
   )
 else()
-  project(var
+  project(Converter
       VERSION 1.0.0
       LANGUAGES CXX
-      DESCRIPTION "var"
+      DESCRIPTION "Converter"
   )
 endif()
 
