@@ -19,14 +19,14 @@ public:
  * @param is_ms Включение миллисекунд с строку, true - включение, иначе - нет
  * @return Возвращает строку из метки времени в формате YYYYMMDD_hhmmssnnn (nnn - значение миллисекунд если включены)
  */
-  static std::string ToString(milliseconds value, bool is_ms);
+  static std::string ToString(const milliseconds& value, bool is_ms);
   /**
    * @brief Получение метки времени из строки
    * 
    * @param sample Строка в формате YYYYMMDD_hhmmssnnn или YYYYMMDD_hhmmss
    * @return Возвращает метку времени
    */
-  static milliseconds ToChrono(std::string sample);
+  static milliseconds ToChrono(std::string_view sample);
 
 private:
 /**
@@ -46,5 +46,5 @@ private:
  *
  * @return Возвращает true если строка соотвествует формату, иначе возвращает false
  */
-  bool isCorrectSample(const std::string& sample);
+  bool isCorrectSample(std::string_view sample);
 };

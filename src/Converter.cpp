@@ -1,7 +1,7 @@
 #include <Converter.h>
 
 std::string
-Converter::ToString(milliseconds value, bool is_ms)
+Converter::ToString(const milliseconds& value, bool is_ms)
 {
   TimePoint tp_now{ duration_cast<TimePoint::duration>(value) };
 
@@ -23,7 +23,7 @@ Converter::ToString(milliseconds value, bool is_ms)
 }
 
 milliseconds
-Converter::ToChrono(std::string sample)
+Converter::ToChrono(std::string_view sample)
 {
   bool is_ms = sample.size() == 18;
   Converter conv;
@@ -34,10 +34,10 @@ Converter::ToChrono(std::string sample)
   int ret;
   if (is_ms)
     ret = sscanf(
-      sample.c_str(), "%4d%2d%2d_%2d%2d%2d%3d", &year, &month, &day, &hour, &minute, &second, &ms);
+      sample.data(), "%4d%2d%2d_%2d%2d%2d%3d", &year, &month, &day, &hour, &minute, &second, &ms);
   else
     ret =
-      sscanf(sample.c_str(), "%4d%2d%2d_%2d%2d%2d", &year, &month, &day, &hour, &minute, &second);
+      sscanf(sample.data(), "%4d%2d%2d_%2d%2d%2d", &year, &month, &day, &hour, &minute, &second);
 
   std::tm __tm;
   __tm.tm_year = year - 1900;
@@ -57,7 +57,7 @@ Converter::ToChrono(std::string sample)
 }
 
 bool
-Converter::isCorrectSample(const std::string& sample)
+Converter::isCorrectSample(std::string_view sample)
 {
   if (sample.size() != 18 && sample.size() != 15) return false;
 
