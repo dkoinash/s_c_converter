@@ -6,30 +6,35 @@ Converter::ToString(const milliseconds& value, bool is_ms)
   TimePoint tp_now{ duration_cast<TimePoint::duration>(value) };
 
   std::time_t now_tt = Clock::to_time_t(tp_now);
-  std::tm* __tm = std::localtime(&now_tt);
+  // std::tm* __tm = std::localtime(&now_tt);
+  std::tm __tm;
+  localtime_s(&__tm, &now_tt);
 
   std::string result;
   if (is_ms) {
-    result.resize(18);
-    sprintf(result.data(),
-            "%04d%02d%02d_%02d%02d%02d%03d",
-            __tm->tm_year + 1900,
-            __tm->tm_mon + 1,
-            __tm->tm_mday,
-            __tm->tm_hour,
-            __tm->tm_min,
-            __tm->tm_sec,
-            value.count() % 1000);
+    result.resize(MAIN_SIZE);
+    int ms = value.count() % 1000;
+    sprintf_s(result.data(),
+              result.size(),
+              "%04i%02i%02i_%02i%02i%02i%03i",
+              __tm.tm_year + 1900,
+              __tm.tm_mon + 1,
+              __tm.tm_mday,
+              __tm.tm_hour,
+              __tm.tm_min,
+              __tm.tm_sec,
+              ms);
   } else {
-    result.resize(15);
-    sprintf(result.data(),
-            "%04d%02d%02d_%02d%02d%02d",
-            __tm->tm_year + 1900,
-            __tm->tm_mon + 1,
-            __tm->tm_mday,
-            __tm->tm_hour,
-            __tm->tm_min,
-            __tm->tm_sec);
+    result.resize(SHORT_SIZE);
+    sprintf_s(result.data(),
+              result.size(),
+              "%04d%02d%02d_%02d%02d%02d",
+              __tm.tm_year + 1900,
+              __tm.tm_mon + 1,
+              __tm.tm_mday,
+              __tm.tm_hour,
+              __tm.tm_min,
+              __tm.tm_sec);
   }
   return result;
 }
@@ -37,7 +42,7 @@ Converter::ToString(const milliseconds& value, bool is_ms)
 milliseconds
 Converter::ToChrono(std::string_view sample)
 {
-  bool is_ms = sample.size() == 18;
+  bool is_ms = sample.size() == MAIN_SIZE;
   Converter conv;
   if (!conv.isCorrectSample(sample)) return milliseconds();
 
@@ -45,11 +50,11 @@ Converter::ToChrono(std::string_view sample)
 
   int ret;
   if (is_ms)
-    ret = sscanf(
+    ret = sscanf_s(
       sample.data(), "%4d%2d%2d_%2d%2d%2d%3d", &year, &month, &day, &hour, &minute, &second, &ms);
   else
     ret =
-      sscanf(sample.data(), "%4d%2d%2d_%2d%2d%2d", &year, &month, &day, &hour, &minute, &second);
+      sscanf_s(sample.data(), "%4d%2d%2d_%2d%2d%2d", &year, &month, &day, &hour, &minute, &second);
 
   std::tm __tm;
   __tm.tm_year = year - 1900;
@@ -71,7 +76,7 @@ Converter::ToChrono(std::string_view sample)
 bool
 Converter::isCorrectSample(std::string_view sample)
 {
-  if (sample.size() != 18 && sample.size() != 15) return false;
+  if (sample.size() != MAIN_SIZE && sample.size() != SHORT_SIZE) return false;
 
   for (const auto& el : sample) {
     if (std::isdigit(el) || sample.at(8) == '_') continue;
