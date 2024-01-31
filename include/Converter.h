@@ -33,7 +33,7 @@ public:
    * @param sample Строка в формате YYYYMMDD_hhmmssnnn или YYYYMMDD_hhmmss
    * @return Возвращает метку времени
    */
-  static milliseconds ToChrono(std::string_view sample);
+  static milliseconds ToMilli(std::string_view sample);
 
 private:
   /**
@@ -53,5 +53,5 @@ private:
    *
    * @return Возвращает true если строка соотвествует формату, иначе возвращает false
    */
-  bool isCorrectSample(std::string_view sample);
+  static bool isCorrectSample(std::string_view sample);
 };

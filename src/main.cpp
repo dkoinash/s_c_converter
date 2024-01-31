@@ -13,14 +13,14 @@ main()
   sample = Converter::ToString(ms, true);
   std::cout << "ToString(ms = true): " << sample << std::endl;
 
-  ms = Converter::ToChrono(sample);
-  std::cout << "ToChrono: " << ms.count() << std::endl;
+  ms = Converter::ToMilli(sample);
+  std::cout << "ToMilli: " << ms.count() << std::endl;
 
   sample = Converter::ToString(ms, false);
   std::cout << "ToString(ms = false): " << sample << std::endl;
 
-  ms = Converter::ToChrono(sample);
-  std::cout << "ToChrono: " << ms.count() << std::endl;
+  ms = Converter::ToMilli(sample);
+  std::cout << "ToMilli: " << ms.count() << std::endl;
 
   return 0;
 }
