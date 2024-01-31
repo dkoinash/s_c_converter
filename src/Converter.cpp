@@ -48,13 +48,9 @@ Converter::ToMilli(std::string_view sample)
 
   int year = 0, month = 0, day = 0, hour = 0, minute = 0, second = 0, ms = 0;
 
-  int ret;
-  if (is_ms)
-    ret = sscanf_s(
-      sample.data(), "%4d%2d%2d_%2d%2d%2d%3d", &year, &month, &day, &hour, &minute, &second, &ms);
-  else
-    ret =
-      sscanf_s(sample.data(), "%4d%2d%2d_%2d%2d%2d", &year, &month, &day, &hour, &minute, &second);
+  int ret = sscanf_s(
+    sample.data(), "%4d%2d%2d_%2d%2d%2d%3d", &year, &month, &day, &hour, &minute, &second, &ms);
+  if (ret < 6) return milliseconds();
 
   std::tm __tm;
   __tm.tm_year = year - 1900;
@@ -64,13 +60,8 @@ Converter::ToMilli(std::string_view sample)
   __tm.tm_min = minute;
   __tm.tm_sec = second;
 
-  std::time_t now_tt2 = std::mktime(&__tm);
-  TimePoint tp_now2 = Clock::from_time_t(now_tt2);
-
-  if (is_ms)
-    return milliseconds(duration_cast<milliseconds>(tp_now2.time_since_epoch()).count() + ms);
-  else
-    return duration_cast<milliseconds>(tp_now2.time_since_epoch());
+  return duration_cast<milliseconds>(Clock::from_time_t(std::mktime(&__tm)).time_since_epoch()) +
+         milliseconds(ms);
 }
 
 bool
