@@ -12,18 +12,16 @@ else()
 endif()
 
 
-if (CMAKE_VERSION VERSION_LESS "3.9")
-  project(Converter
+project(Converter
     VERSION 1.0.0
     LANGUAGES CXX
-  )
-else()
-  project(Converter
-      VERSION 1.0.0
-      LANGUAGES CXX
-      DESCRIPTION "Converter"
-  )
-endif()
+    DESCRIPTION "Converter"
+)
+
+################################################################################
+# Options
+################################################################################
+option(UTILS_BUILD_TESTS "Build test programs" ON)
 
 ################################################################################
 # Sources
@@ -51,3 +49,11 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 # Compilation flags
 ################################################################################
 include (${CMAKE_SOURCE_DIR}/cmake/compilation_flags.cmake)
+
+################################################################################
+# Tests
+################################################################################
+if(UTILS_BUILD_TESTS)
+  enable_testing()
+  add_subdirectory(tests)
+endif()
