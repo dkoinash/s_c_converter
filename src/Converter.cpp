@@ -9,39 +9,41 @@ using TimePoint = Clock::time_point;
 std::string
 Converter::ToString(const milliseconds& value, bool is_ms)
 {
-  TimePoint tp_now{ duration_cast<TimePoint::duration>(value) };
+  std::time_t tt = Clock::to_time_t(TimePoint{ duration_cast<TimePoint::duration>(value) });
+  std::tm tm;
+  localtime_s(&tm, &tt);
+  int ms = value.count() % 1000;
 
-  std::time_t now_tt = Clock::to_time_t(tp_now);
+  tm.tm_year += 1900;
+  tm.tm_mon += 1;
 
-  std::tm __tm;
-  localtime_s(&__tm, &now_tt);
-
+  const std::string format = is_ms ? "%04d%02d%02d_%02d%02d%02d%03d" : "%04d%02d%02d_%02d%02d%02d";
   std::string result;
-  if (is_ms) {
-    result.resize(MAIN_SIZE);
-    int ms = value.count() % 1000;
-    sprintf_s(result.data(),
-              result.size() + 1,
-              "%04d%02d%02d_%02d%02d%02d%03d",
-              __tm.tm_year + 1900,
-              __tm.tm_mon + 1,
-              __tm.tm_mday,
-              __tm.tm_hour,
-              __tm.tm_min,
-              __tm.tm_sec,
-              ms);
-  } else {
-    result.resize(SHORT_SIZE);
-    sprintf_s(result.data(),
-              result.size() + 1,
-              "%04d%02d%02d_%02d%02d%02d",
-              __tm.tm_year + 1900,
-              __tm.tm_mon + 1,
-              __tm.tm_mday,
-              __tm.tm_hour,
-              __tm.tm_min,
-              __tm.tm_sec);
-  }
+
+  const int bufSize = snprintf(nullptr,
+                               0,
+                               format.c_str(),
+                               tm.tm_year,
+                               tm.tm_mon,
+                               tm.tm_mday,
+                               tm.tm_hour,
+                               tm.tm_min,
+                               tm.tm_sec,
+                               ms);
+
+  result.resize(bufSize);
+
+  snprintf(result.data(),
+           bufSize+1,
+           format.c_str(),
+           tm.tm_year,
+           tm.tm_mon,
+           tm.tm_mday,
+           tm.tm_hour,
+           tm.tm_min,
+           tm.tm_sec,
+           ms);
+
   return result;
 }
 
