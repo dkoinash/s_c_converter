@@ -1,4 +1,10 @@
 #include <Converter.h>
+#include <ctime>
+
+using namespace std::chrono;
+
+using Clock = system_clock;
+using TimePoint = Clock::time_point;
 
 std::string
 Converter::ToString(const milliseconds& value, bool is_ms)
