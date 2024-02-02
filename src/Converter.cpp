@@ -48,20 +48,23 @@ Converter::ToString(const milliseconds& value, bool is_ms)
 milliseconds
 Converter::ToMilli(std::string_view sample)
 {
-  int year = 0, month = 0, day = 0, hour = 0, minute = 0, second = 0, ms = 0;
+  std::tm tm;
+  int ms = 0;
 
-  int ret = sscanf_s(
-    sample.data(), "%4d%2d%2d_%2d%2d%2d%3d", &year, &month, &day, &hour, &minute, &second, &ms);
+  int ret = sscanf_s(sample.data(),
+                     "%4d%2d%2d_%2d%2d%2d%3d",
+                     &tm.tm_year,
+                     &tm.tm_mon,
+                     &tm.tm_mday,
+                     &tm.tm_hour,
+                     &tm.tm_min,
+                     &tm.tm_sec,
+                     &ms);
   if (ret < 6) return milliseconds();
 
-  std::tm __tm;
-  __tm.tm_year = year - 1900;
-  __tm.tm_mon = month - 1;
-  __tm.tm_mday = day;
-  __tm.tm_hour = hour;
-  __tm.tm_min = minute;
-  __tm.tm_sec = second;
+  tm.tm_year -= 1900;
+  tm.tm_mon -= 1;
 
-  return duration_cast<milliseconds>(Clock::from_time_t(std::mktime(&__tm)).time_since_epoch()) +
+  return duration_cast<milliseconds>(Clock::from_time_t(std::mktime(&tm)).time_since_epoch()) +
          milliseconds(ms);
 }
