@@ -34,3 +34,10 @@ TEST(Converter, ToStringWithoutMS)
   milliseconds ms = Converter::ToMilli(str);
   ASSERT_EQ(Converter::ToString(ms, false), str);
 }
+
+// TEST(Converter, MassTest)
+// {
+//   std::string startStr = "20200101_000000000";
+//   milliseconds ms = Converter::ToMilli(str);
+//   ASSERT_EQ(Converter::ToString(ms, false), str);
+// }

@@ -3,6 +3,8 @@
 
 #include <gtest/gtest.h>
 
+// option(UTILS_BUILD_TESTS "Build test programs" ON)
+
 // int
 // main()
 // {
