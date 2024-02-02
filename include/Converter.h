@@ -46,12 +46,4 @@ private:
    */
   ~Converter() = default;
 
-  /**
-   * @brief Проверка корректности строки
-   *
-   * @param sample Строка в формате YYYYMMDD_hhmmssnnn или YYYYMMDD_hhmmss
-   *
-   * @return Возвращает true если строка соотвествует формату, иначе возвращает false
-   */
-  static bool isCorrectSample(std::string_view sample);
 };

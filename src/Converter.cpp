@@ -42,10 +42,6 @@ Converter::ToString(const milliseconds& value, bool is_ms)
 milliseconds
 Converter::ToMilli(std::string_view sample)
 {
-  bool is_ms = sample.size() == MAIN_SIZE;
-
-  if (!isCorrectSample(sample)) return milliseconds();
-
   int year = 0, month = 0, day = 0, hour = 0, minute = 0, second = 0, ms = 0;
 
   int ret = sscanf_s(
@@ -62,17 +58,4 @@ Converter::ToMilli(std::string_view sample)
 
   return duration_cast<milliseconds>(Clock::from_time_t(std::mktime(&__tm)).time_since_epoch()) +
          milliseconds(ms);
-}
-
-bool
-Converter::isCorrectSample(std::string_view sample)
-{
-  if (sample.size() != MAIN_SIZE && sample.size() != SHORT_SIZE) return false;
-
-  for (const auto& el : sample) {
-    if (std::isdigit(el) || sample.at(8) == '_') continue;
-    return false;
-  }
-
-  return true;
 }
