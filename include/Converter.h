@@ -18,7 +18,7 @@ public:
    * @return Возвращает строку из метки времени в формате YYYYMMDD_hhmmssnnn (nnn - значение
    * миллисекунд если включены)
    */
-  static std::string ToString(const std::chrono::milliseconds& value, bool is_ms);
+  static std::string ToString(const std::chrono::milliseconds& value, bool is_ms = true);
   /**
    * @brief Получение метки времени из строки
    *
